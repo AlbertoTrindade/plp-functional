@@ -9,21 +9,10 @@ import lf2.plp.expressions2.memory.AmbienteExecucao;
 import lf2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-public class ArgOpcional extends Arg implements Expressao {
+public class ArgRequerido extends Arg {
 	
-	private Expressao valorPadrao;
-
-	public Expressao getValorPadrao() {
-		return valorPadrao;
-	}
-
-	public void setValorPadrao(Expressao valorPadrao) {
-		this.valorPadrao = valorPadrao;
-	}
-
-	public ArgOpcional(Id argId, Expressao valorPadrao) {
+	public ArgRequerido(Id argId) {
 		setArgId(argId);
-		this.valorPadrao = valorPadrao;
 	}
 
 	@Override
@@ -49,10 +38,5 @@ public class ArgOpcional extends Arg implements Expressao {
 	public Expressao reduzir(AmbienteExecucao ambiente) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Expressao clone() {
-		return this;
 	}
 }
