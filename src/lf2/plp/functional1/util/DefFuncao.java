@@ -9,6 +9,7 @@ import lf2.plp.expressions2.expression.Id;
 import lf2.plp.expressions2.memory.AmbienteCompilacao;
 import lf2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf2.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import lf2.plp.functional2.excecao.ArgumentoRequeridoAposOpcionalException;
 import lf2.plp.functional2.expression.Arg;
 import lf2.plp.functional2.expression.ArgOpcional;
 
@@ -54,11 +55,10 @@ public class DefFuncao {
 	 *                mesmo bloco do ambiente.
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException, ArgumentoRequeridoAposOpcionalException {
 		ambiente.incrementa();
 		
 		boolean temArgumentosOpcionais = false;
-		boolean argumentosOpcionaisDireita = true;
 
 		// Usa uma inst�ncia de TipoQualquer para cada par�metro formal.
 		// Essa inst�ncia ser� inferida durante o getTipo de exp.
@@ -70,14 +70,8 @@ public class DefFuncao {
 				temArgumentosOpcionais = true;
 			}
 			else if (temArgumentosOpcionais) {
-				argumentosOpcionaisDireita = false;
+				throw new ArgumentoRequeridoAposOpcionalException(arg);
 			}
-		}
-		
-		if (!argumentosOpcionaisDireita) {
-			ambiente.restaura();
-			
-			return false;
 		}
 
 		// Chama o checa tipo da express�o para veririficar se o corpo da

@@ -19,4 +19,9 @@ public class ArgOpcional extends Arg {
 	public void setValorPadrao(Expressao valorPadrao) {
 		this.valorPadrao = valorPadrao;
 	}
+	
+	@Override
+	public String toString() {
+		return getArgId() + "?(" + valorPadrao + ")";
+	}
 }

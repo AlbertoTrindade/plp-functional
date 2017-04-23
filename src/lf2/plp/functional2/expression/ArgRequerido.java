@@ -7,4 +7,9 @@ public class ArgRequerido extends Arg {
 	public ArgRequerido(Id argId) {
 		setArgId(argId);
 	}
+	
+	@Override
+	public String toString() {
+		return getArgId().toString();
+	}
 }
