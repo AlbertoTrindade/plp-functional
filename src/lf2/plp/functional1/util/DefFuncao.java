@@ -10,6 +10,7 @@ import lf2.plp.expressions2.memory.AmbienteCompilacao;
 import lf2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf2.plp.functional2.expression.Arg;
+import lf2.plp.functional2.expression.ArgOpcional;
 
 public class DefFuncao {
 
@@ -55,12 +56,28 @@ public class DefFuncao {
 	public boolean checaTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		ambiente.incrementa();
+		
+		boolean temArgumentosOpcionais = false;
+		boolean argumentosOpcionaisDireita = true;
 
 		// Usa uma inst�ncia de TipoQualquer para cada par�metro formal.
 		// Essa inst�ncia ser� inferida durante o getTipo de exp.
 		for (Arg arg : args) {
 			Id id = arg.getArgId();
 			ambiente.map(id, new TipoPolimorfico());
+			
+			if (arg instanceof ArgOpcional) {
+				temArgumentosOpcionais = true;
+			}
+			else if (temArgumentosOpcionais) {
+				argumentosOpcionaisDireita = false;
+			}
+		}
+		
+		if (!argumentosOpcionaisDireita) {
+			ambiente.restaura();
+			
+			return false;
 		}
 
 		// Chama o checa tipo da express�o para veririficar se o corpo da
