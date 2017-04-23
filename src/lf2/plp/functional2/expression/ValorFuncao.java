@@ -18,8 +18,8 @@ public class ValorFuncao extends DefFuncao implements ValorAbstrato {
 
 	private Id id;
 
-	public ValorFuncao(List<Id> argsId, Expressao exp) {
-		super(argsId, exp);
+	public ValorFuncao(List<Arg> args, Expressao exp) {
+		super(args, exp);
 	}
 
 	public Valor avaliar(AmbienteExecucao ambiente) {
@@ -30,7 +30,7 @@ public class ValorFuncao extends DefFuncao implements ValorAbstrato {
 	@Override
 	public String toString() {
 	
-		return String.format("fn %s . %s", listToString(getListaId(), " "),
+		return String.format("fn %s . %s", listToString(getListaArg(), " "),
 				getExp());
 	}
 	
@@ -49,7 +49,8 @@ public class ValorFuncao extends DefFuncao implements ValorAbstrato {
 			ambiente.map(this.id, new ValorIrredutivel());
 		}
 		
-		for(Id id : this.argsId){
+		for(Arg arg : this.args){
+			Id id = arg.getArgId();
 			ambiente.map(id, new ValorIrredutivel());
 		}
 		this.exp = exp.reduzir(ambiente);
@@ -61,10 +62,10 @@ public class ValorFuncao extends DefFuncao implements ValorAbstrato {
 	
 	public ValorFuncao clone() {
 		ValorFuncao retorno;
-		List<Id> novaLista = new ArrayList<Id>(this.argsId.size());
+		List<Arg> novaLista = new ArrayList<Arg>(this.args.size());
 		
-		for (Id id : this.argsId) {
-			novaLista.add(id.clone());
+		for (Arg arg : this.args) {
+			novaLista.add(arg.clone());
 		}
 		
 		retorno = new ValorFuncao(novaLista, this.exp.clone());

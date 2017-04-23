@@ -9,20 +9,21 @@ import lf2.plp.expressions2.expression.Id;
 import lf2.plp.expressions2.memory.AmbienteCompilacao;
 import lf2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf2.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import lf2.plp.functional2.expression.Arg;
 
 public class DefFuncao {
 
-	protected List<Id> argsId;
+	protected List<Arg> args;
 
 	protected Expressao exp;
 
-	public DefFuncao(List<Id> argsId, Expressao exp) {
-		this.argsId = argsId;
+	public DefFuncao(List<Arg> args, Expressao exp) {
+		this.args = args;
 		this.exp = exp;
 	}
 
-	public List<Id> getListaId() {
-		return argsId;
+	public List<Arg> getListaArg() {
+		return args;
 	}
 
 	public Expressao getExp() {
@@ -35,7 +36,7 @@ public class DefFuncao {
 	 * @return a aridade desta funcao.
 	 */
 	public int getAridade() {
-		return argsId.size();
+		return args.size();
 	}
 
 	/**
@@ -57,7 +58,8 @@ public class DefFuncao {
 
 		// Usa uma inst�ncia de TipoQualquer para cada par�metro formal.
 		// Essa inst�ncia ser� inferida durante o getTipo de exp.
-		for (Id id : argsId) {
+		for (Arg arg : args) {
+			Id id = arg.getArgId();
 			ambiente.map(id, new TipoPolimorfico());
 		}
 
@@ -89,7 +91,8 @@ public class DefFuncao {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		ambiente.incrementa();
 
-		for (Id id : argsId) {
+		for (Arg arg : args) {
+			Id id = arg.getArgId();
 			ambiente.map(id, new TipoPolimorfico());
 		}
 
@@ -106,7 +109,7 @@ public class DefFuncao {
 		List<Tipo> params = new ArrayList<Tipo>(getAridade());
 		Tipo argTipo;
 		for (int i = 0; i < getAridade(); i++) {
-			argTipo = ((TipoPolimorfico) ambiente.get(argsId.get(i))).inferir();
+			argTipo = ((TipoPolimorfico) ambiente.get(args.get(i).getArgId())).inferir();
 			params.add(argTipo);
 		}
 		result = new TipoFuncao(params, result);
@@ -117,10 +120,10 @@ public class DefFuncao {
 	}
 	
 	public DefFuncao clone() {
-		List<Id> novaLista = new ArrayList<Id>(this.argsId.size());
+		List<Arg> novaLista = new ArrayList<Arg>(this.args.size());
 		
-		for (Id id : this.argsId){
-			novaLista.add(id.clone());
+		for (Arg arg : this.args){
+			novaLista.add(arg.clone());
 		}
 		
 		return new DefFuncao(novaLista, this.exp.clone());

@@ -1,9 +1,8 @@
 package lf2.plp.functional2.expression;
 
-import lf2.plp.expressions2.expression.Expressao;
 import lf2.plp.expressions2.expression.Id;
 
-public abstract class Arg implements Expressao {
+public abstract class Arg {
 	
 	private Id argId;
 	
@@ -16,7 +15,7 @@ public abstract class Arg implements Expressao {
 	}	
 
 	@Override
-	public Expressao clone() {
+	public Arg clone() {
 		return this;
 	}
 

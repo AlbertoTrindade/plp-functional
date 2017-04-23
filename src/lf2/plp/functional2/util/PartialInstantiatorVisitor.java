@@ -30,6 +30,7 @@ import lf2.plp.functional1.declaration.DeclaracaoFuncional;
 import lf2.plp.functional1.expression.IfThenElse;
 import lf2.plp.functional2.declaration.DecFuncao;
 import lf2.plp.functional2.expression.Aplicacao;
+import lf2.plp.functional2.expression.Arg;
 import lf2.plp.functional2.expression.ExpDeclaracao;
 import lf2.plp.functional2.expression.ValorFuncao;
 
@@ -324,13 +325,17 @@ public class PartialInstantiatorVisitor {
 	public Expressao _visitValorFuncao(ValorFuncao valor,
 			AmbienteExecucao ambiente, Set<Id> localVariables) {
 		Set<Id> novasVariaveisLocais = new HashSet<Id>(localVariables);
-		novasVariaveisLocais.addAll(valor.getListaId());
+		
+		for (Arg arg : valor.getListaArg()) {
+			novasVariaveisLocais.add(arg.getArgId());
+		}		
+		
 		Expressao novaExpressao = visit(valor.getExp(), ambiente,
 				novasVariaveisLocais);
 		
-		List<Id> listaId = valor.getListaId();
+		List<Arg> listaId = valor.getListaArg();
 		if (novaExpressao instanceof ValorFuncao){
-			List<Id> listaIdValor = ((ValorFuncao) novaExpressao).getListaId();
+			List<Arg> listaIdValor = ((ValorFuncao) novaExpressao).getListaArg();
 			listaId.addAll(listaIdValor);
 		}
 		

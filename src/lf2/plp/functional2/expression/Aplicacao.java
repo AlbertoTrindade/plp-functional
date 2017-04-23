@@ -153,7 +153,12 @@ public class Aplicacao implements Expressao {
 	private Map<Id, Valor> resolveParametersBindings(AmbienteExecucao ambiente,
 			DefFuncao funcao) throws VariavelNaoDeclaradaException,
 			VariavelJaDeclaradaException {
-		List<Id> parametrosId = funcao.getListaId();
+		List<Id> parametrosId = new ArrayList<Id>(this.argsExpressao.size());
+		
+		for (Arg arg : funcao.getListaArg()) {
+			parametrosId.add(arg.getArgId());
+		}
+		
 		List<? extends Expressao> expressoesValorReal = argsExpressao;
 
 		Map<Id, Valor> mapIdValor = new HashMap<Id, Valor>();
