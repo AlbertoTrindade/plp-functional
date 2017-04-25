@@ -95,7 +95,8 @@ public class Aplicacao implements Expressao {
 			for (Expressao valorReal : argsExpressao) {
 				params.add(valorReal.getTipo(ambiente));
 			}
-			tipoFuncao = new TipoFuncao(params, new TipoPolimorfico());
+			tipoFuncao = new TipoFuncao(params, new TipoPolimorfico(), (tipoFuncao != null) ? ((TipoFuncao) tipoFuncao).getAridadeRequerido() :															
+																							   params.size());
 		}
 		return tipoFuncao;
 	}
@@ -152,25 +153,33 @@ public class Aplicacao implements Expressao {
 
 	private Map<Id, Valor> resolveParametersBindings(AmbienteExecucao ambiente,
 			DefFuncao funcao) throws VariavelNaoDeclaradaException,
-			VariavelJaDeclaradaException {
-		List<Id> parametrosId = new ArrayList<Id>(this.argsExpressao.size());
-		
-		for (Arg arg : funcao.getListaArg()) {
-			parametrosId.add(arg.getArgId());
-		}
-		
+			VariavelJaDeclaradaException {		
 		List<? extends Expressao> expressoesValorReal = argsExpressao;
 
 		Map<Id, Valor> mapIdValor = new HashMap<Id, Valor>();
 
 		Iterator<? extends Expressao> iterExpressoesValor = expressoesValorReal
 				.iterator();
-		for (Id id : parametrosId) {
-			Expressao exp = iterExpressoesValor.next();
+		
+		ambiente.incrementa();
+		
+		for (Arg arg : funcao.getListaArg()) {
+			Id id = arg.getArgId();
+			Expressao exp;
+			
+			if (iterExpressoesValor.hasNext()) {
+				exp = iterExpressoesValor.next();
+			}
+			else {
+				exp = ((ArgOpcional) arg).getValorPadrao();
+			}
+			 
 			Valor valorReal = exp.avaliar(ambiente);
 			mapIdValor.put(id, valorReal);
+			ambiente.map(id, valorReal);
 		}
-
+		
+		ambiente.restaura();
 		return mapIdValor;
 	}
 

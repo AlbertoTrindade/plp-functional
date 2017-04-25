@@ -14,6 +14,7 @@ import lf2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf2.plp.functional2.excecao.ArgumentoRequeridoAposOpcionalException;
 import lf2.plp.functional2.expression.Arg;
 import lf2.plp.functional2.expression.ArgOpcional;
+import lf2.plp.functional2.expression.ArgRequerido;
 
 public class DefFuncao {
 
@@ -161,11 +162,23 @@ public class DefFuncao {
 			argTipo = ((TipoPolimorfico) ambiente.get(args.get(i).getArgId())).inferir();
 			params.add(argTipo);
 		}
-		result = new TipoFuncao(params, result);
+		result = new TipoFuncao(params, result, getAridadeRequerido());
 
 		ambiente.restaura();
 
 		return result;
+	}
+	
+	public int getAridadeRequerido() {
+		int aridadeRequerido = 0;
+		
+		for (Arg arg : args) {
+			if (arg instanceof ArgRequerido) {
+				aridadeRequerido++;
+			}
+		}
+		
+		return aridadeRequerido;
 	}
 	
 	public DefFuncao clone() {

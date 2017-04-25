@@ -43,6 +43,11 @@ public class TipoFuncao implements Tipo {
 	 * O tipo da imagem (o tipo de retorno) da fun��o.
 	 */
 	private Tipo imagem;
+	
+	/**
+	 * Quantidade de parametros requeridos
+	 */
+	private int aridadeRequerido;
 
 	/**
 	 * Construtor da classe que representa um tipo fun��o (T1 x ... x Tn -> T).
@@ -51,10 +56,13 @@ public class TipoFuncao implements Tipo {
 	 *            A lista dos tipos do dom�nio da fun��o (T1 x ... x Tn).
 	 * @param imagem
 	 *            O tipo da imagem da fun��o (T).
+	 * @param aridadeRequerido
+	 *            Quantidade de parametros requeridos (primeiros do dominio)
 	 */
-	public TipoFuncao(List<Tipo> dominio, Tipo imagem) {
+	public TipoFuncao(List<Tipo> dominio, Tipo imagem, int aridadeRequerido) {
 		this.dominio = dominio;
 		this.imagem = imagem;
+		this.aridadeRequerido = aridadeRequerido;
 	}
 
 	/*
@@ -72,6 +80,10 @@ public class TipoFuncao implements Tipo {
 
 	public Tipo getImagem() {
 		return imagem;
+	}
+	
+	public int getAridadeRequerido() {
+		return aridadeRequerido;
 	}
 
 	public boolean eBooleano() {
@@ -155,7 +167,8 @@ public class TipoFuncao implements Tipo {
 
 	private boolean checkArgumentListSize(
 			List<? extends Expressao> parametrosFormais) {
-		return getDominio().size() == parametrosFormais.size();
+		return getAridadeRequerido() <= parametrosFormais.size() && 
+			   parametrosFormais.size() <= getDominio().size();
 	}
 
 	private boolean checkArgumentTypes(AmbienteCompilacao ambiente,

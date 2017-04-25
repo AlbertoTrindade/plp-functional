@@ -66,6 +66,15 @@ public class DecFuncao implements DeclaracaoFuncional {
 	private int getAridade() {
 		return valorFuncao.getAridade();
 	}
+	
+	/**
+	 * Retorna a aridade de parametros requeridos da funcao declarada.
+	 * 
+	 * @return a aridade de parametros requeridos da funcao declarada.
+	 */
+	private int getAridadeRequerido() {
+		return valorFuncao.getAridadeRequerido();
+	}
 
 	/**
 	 * Realiza a verificacao de tipos desta declara��o.
@@ -88,7 +97,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 		for (int i = 0; i < getAridade(); i++) {
 			params.add(new TipoPolimorfico());
 		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
+		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico(), getAridadeRequerido());
 		// Mapeia a pr�pria fun��o no ambiente para permitir recurs�o.
 		ambiente.map(id, tipo);
 
@@ -120,7 +129,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 		for (int i = 0; i < getAridade(); i++) {
 			params.add(new TipoPolimorfico());
 		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
+		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico(), getAridadeRequerido());
 		amb.map(id, tipo);
 
 		Tipo result = valorFuncao.getTipo(amb);
