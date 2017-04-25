@@ -1,7 +1,9 @@
 package lf2.plp.functional1.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lf2.plp.expressions1.util.Tipo;
 import lf2.plp.expressions2.expression.Expressao;
@@ -77,9 +79,45 @@ public class DefFuncao {
 		// Chama o checa tipo da express�o para veririficar se o corpo da
 		// fun��o est� correto. Isto ir� inferir o tipo dos par�metros.
 		boolean result = exp.checaTipo(ambiente);
+		
+		Map<Arg, Tipo> auxMap = new HashMap<Arg, Tipo>();
+		for (Arg arg : args) {
+			auxMap.put(arg, ambiente.get(arg.getArgId()));
+		}
+		
+		ambiente.restaura();
+		
+		// Checa o tipo do valor default de parametros opcionais e se eles referenciam
+		// parametros formais listados somente a esquerda
+		result &= checaTipoParametrosOpcionais(ambiente, auxMap);
+
+		return result;
+	}
+	
+	private boolean checaTipoParametrosOpcionais(AmbienteCompilacao ambiente, Map<Arg, Tipo> auxMap) {
+		boolean result = true;
+		ambiente.incrementa();
+		
+		for (Arg arg : args) {
+			if (arg instanceof ArgOpcional) {
+				ArgOpcional argOpcional = (ArgOpcional) arg;
+				Expressao valorPadrao = argOpcional.getValorPadrao();
+				
+				if (valorPadrao.checaTipo(ambiente)) {
+					Tipo tipoValorPadrao = argOpcional.getValorPadrao().getTipo(ambiente);
+					
+					result &= auxMap.get(argOpcional).eIgual(tipoValorPadrao); 
+				}
+				else {
+					result = false;
+				}
+			}
+			
+			ambiente.map(arg.getArgId(), auxMap.get(arg));
+		}
 
 		ambiente.restaura();
-
+		
 		return result;
 	}
 
