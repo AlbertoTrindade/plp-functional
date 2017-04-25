@@ -72,12 +72,16 @@ public class Aplicacao implements Expressao {
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+		boolean result = true;
+		
+		if (func instanceof ValorFuncao) {
+			result = ((ValorFuncao) func).checaTipo(ambiente);
+		}
+		
 		Tipo tipo = getFuncType(ambiente);
 
-		boolean result;
-
 		TipoFuncao tipoFuncao = (TipoFuncao) tipo;
-		result = tipoFuncao.checaTipo(ambiente, argsExpressao);
+		result &= tipoFuncao.checaTipo(ambiente, argsExpressao);
 
 		return result;
 	}
