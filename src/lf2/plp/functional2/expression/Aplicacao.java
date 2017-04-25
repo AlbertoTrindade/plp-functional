@@ -95,8 +95,9 @@ public class Aplicacao implements Expressao {
 			for (Expressao valorReal : argsExpressao) {
 				params.add(valorReal.getTipo(ambiente));
 			}
-			tipoFuncao = new TipoFuncao(params, new TipoPolimorfico(), (tipoFuncao != null) ? ((TipoFuncao) tipoFuncao).getAridadeRequerido() :															
-																							   params.size());
+			tipoFuncao = new TipoFuncao(params, new TipoPolimorfico(), (tipoFuncao != null && tipoFuncao instanceof TipoFuncao) ? 
+																							  ((TipoFuncao) tipoFuncao).getAridadeRequerido() :															
+																							  params.size());
 		}
 		return tipoFuncao;
 	}

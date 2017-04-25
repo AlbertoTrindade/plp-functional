@@ -52,6 +52,11 @@ public class ValorFuncao extends DefFuncao implements ValorAbstrato {
 		for(Arg arg : this.args){
 			Id id = arg.getArgId();
 			ambiente.map(id, new ValorIrredutivel());
+			
+			if (arg instanceof ArgOpcional) {
+				ArgOpcional argOpcional = (ArgOpcional) arg;
+				argOpcional.setValorPadrao(argOpcional.getValorPadrao().reduzir(ambiente));
+			}
 		}
 		this.exp = exp.reduzir(ambiente);
 		
